@@ -3,6 +3,8 @@ package com.github.welcomeworld.debugMessageView;
 import android.content.Context;
 import android.graphics.PixelFormat;
 import android.os.Build;
+import android.os.Handler;
+import android.os.Looper;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -18,10 +20,12 @@ import androidx.recyclerview.widget.RecyclerView;
 public class MessageWindowManager {
 
     private static MessageWindowManager instance;
+    private static Handler uiHandler;
 
     public static MessageWindowManager getInstance() {
         if (instance == null) {
             instance = new MessageWindowManager();
+            uiHandler = new Handler(Looper.getMainLooper());
         }
         return instance;
     }
@@ -248,10 +252,23 @@ public class MessageWindowManager {
     }
 
     public void addMessage(String message){
-        if(messageAdapter!=null){
-            messageAdapter.getMessages().add(message);
-            messageAdapter.notifyItemInserted(messageAdapter.getMessages().size()-1);
-            recyclerView.scrollToPosition(messageAdapter.getMessages().size()-1);
+        if(Looper.myLooper()!=Looper.getMainLooper()){
+            uiHandler.post(new Runnable() {
+                @Override
+                public void run() {
+                    if(messageAdapter!=null){
+                        messageAdapter.getMessages().add(message);
+                        messageAdapter.notifyItemInserted(messageAdapter.getMessages().size()-1);
+                        recyclerView.scrollToPosition(messageAdapter.getMessages().size()-1);
+                    }
+                }
+            });
+        }else {
+            if(messageAdapter!=null){
+                messageAdapter.getMessages().add(message);
+                messageAdapter.notifyItemInserted(messageAdapter.getMessages().size()-1);
+                recyclerView.scrollToPosition(messageAdapter.getMessages().size()-1);
+            }
         }
     }
 
