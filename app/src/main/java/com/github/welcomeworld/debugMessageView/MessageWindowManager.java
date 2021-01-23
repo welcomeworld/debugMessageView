@@ -81,7 +81,7 @@ public class MessageWindowManager {
         screenHeight = context.getResources().getDisplayMetrics().heightPixels;
         screenWidth = context.getResources().getDisplayMetrics().widthPixels;
         if (playView == null) {
-            playView = LayoutInflater.from(mContext).inflate(R.layout.window_overlay, null, false);
+            playView = LayoutInflater.from(mContext).inflate(R.layout.debug_message_view_window_overlay, null, false);
         }
         if (layoutView == null) {
             layoutView = playView.findViewById(R.id.drag_view);
@@ -92,7 +92,7 @@ public class MessageWindowManager {
             messageAdapter = new MessageAdapter();
             recyclerView.setAdapter(messageAdapter);
         }
-        closeView = (TextView) LayoutInflater.from(mContext).inflate(R.layout.window_close_view, null, false);
+        closeView = (TextView) LayoutInflater.from(mContext).inflate(R.layout.debug_message_view_window_close_view, null, false);
         closeView.setVisibility(View.GONE);
         initLayoutParams();
         initEvent();
